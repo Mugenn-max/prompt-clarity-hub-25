@@ -1,0 +1,99 @@
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { BarChart2 } from "lucide-react";
+
+type Audit = { ts: number; kind: "prompt" | "response"; overall: number; len?: number };
+
+export default function Analytics() {
+  const [audits, setAudits] = useState<Audit[]>([]);
+
+  useEffect(() => {
+    try {
+      setAudits(JSON.parse(localStorage.getItem("ma_audits") || "[]"));
+    } catch {}
+  }, []);
+
+  const stats = useMemo(() => {
+    if (!audits.length) return null;
+    const avg = Math.round(audits.reduce((a, b) => a + b.overall, 0) / audits.length);
+    return { count: audits.length, avg };
+  }, [audits]);
+
+  return (
+    <div className="container py-12">
+      <header className="mx-auto max-w-3xl">
+        <Badge variant="secondary" className="mb-3 gap-1"><BarChart2 className="h-3 w-3" /> Analytics</Badge>
+        <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Your local analytics</h1>
+        <p className="mt-3 text-muted-foreground">
+          Personal stats stored in your browser only. No server, no tracking. AI-literacy context below.
+        </p>
+      </header>
+
+      <section className="mt-10">
+        <h2 className="mb-4 text-lg font-semibold">Personal</h2>
+        <div className="grid gap-4 md:grid-cols-5">
+          <StatCard label="Audits run" value={stats?.count ?? "—"} />
+          <StatCard label="Avg. Clarity" value={stats?.avg ?? "—"} />
+          <StatCard label="Best dimension" value="—" hint="Unlocked after first audit" />
+          <StatCard label="Lowest dimension" value="—" hint="Unlocked after first audit" />
+          <StatCard label="Top category" value="—" hint="Unlocked after first audit" />
+        </div>
+
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle className="text-base">Trend</CardTitle>
+            <CardDescription>
+              {stats ? "Recent audits below. Charts coming as you accumulate data." : "No local audits yet."}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {!stats ? (
+              <div className="rounded-lg border border-dashed border-border p-10 text-center">
+                <p className="font-medium">No local audits yet.</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Run your first Prompt Audit to unlock local readiness trends and workflow analytics.
+                </p>
+                <Button asChild className="mt-4">
+                  <Link to="/prompt-audit">Start a Prompt Audit</Link>
+                </Button>
+              </div>
+            ) : (
+              <ul className="divide-y divide-border">
+                {audits.slice(0, 10).map((a) => (
+                  <li key={a.ts} className="flex items-center justify-between py-2 text-sm">
+                    <span className="capitalize text-muted-foreground">{a.kind} audit</span>
+                    <span className="tabular-nums">{new Date(a.ts).toLocaleString()}</span>
+                    <span className="font-medium">{a.overall}/100</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </CardContent>
+        </Card>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="mb-4 text-lg font-semibold">AI literacy context</h2>
+        <p className="mb-4 text-sm text-muted-foreground">
+          We do not show global usage stats or fake leaderboards. For ecosystem context, see Insights.
+        </p>
+        <Button variant="outline" asChild><Link to="/insights">Open Insights</Link></Button>
+      </section>
+    </div>
+  );
+}
+
+function StatCard({ label, value, hint }: { label: string; value: number | string; hint?: string }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardDescription>{label}</CardDescription>
+        <CardTitle className="text-2xl tabular-nums">{value}</CardTitle>
+      </CardHeader>
+      {hint && <CardContent className="pt-0 text-xs text-muted-foreground">{hint}</CardContent>}
+    </Card>
+  );
+}
