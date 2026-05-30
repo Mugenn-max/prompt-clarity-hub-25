@@ -106,12 +106,8 @@ export default function Analytics() {
         </Card>
       </section>
 
-      <section className="mt-12">
-        <h2 className="mb-4 text-lg font-semibold">AI literacy context</h2>
-        <p className="mb-4 text-sm text-muted-foreground">
-          We do not show global usage stats or fake leaderboards. For ecosystem context, see Insights.
-        </p>
-        <Button variant="outline" asChild><Link to="/insights">Open Insights</Link></Button>
+      <section className="mt-16">
+        <SourceReview variant="analytics" />
       </section>
     </div>
   );
