@@ -4,6 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BarChart2 } from "lucide-react";
+import HelpTip from "@/components/HelpTip";
+import SourceReview from "@/components/SourceReview";
 
 type Audit = { ts: number; kind: "prompt" | "response"; overall: number; len?: number };
 
@@ -31,6 +33,35 @@ export default function Analytics() {
           Personal stats stored in your browser only. No server, no tracking. AI-literacy context below.
         </p>
       </header>
+
+      <section className="mt-10" id="how-this-data-works">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              How this data works
+              <HelpTip term="Local-only analytics" highlightId="how-this-data-works" />
+            </CardTitle>
+            <CardDescription>
+              Personal stats and public insights update on different rhythms — on purpose.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-3 text-sm md:grid-cols-2">
+            <ul className="space-y-2 text-muted-foreground">
+              <li>• Personal analytics are local-only — stored in your browser.</li>
+              <li>• Public insight cards use source-backed summaries.</li>
+              <li>• Source metadata can refresh automatically.</li>
+              <li>• Interpretations are reviewed before publication.</li>
+            </ul>
+            <div className="rounded-md border border-border bg-muted/30 p-3 text-xs">
+              <span className="font-medium text-foreground">Example. </span>
+              <span className="text-muted-foreground">
+                Your prompt scores update instantly because they come from your own checks. Regional AI literacy
+                summaries update only after review because public sources require context.
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
 
       <section className="mt-10">
         <h2 className="mb-4 text-lg font-semibold">Personal</h2>
