@@ -1,7 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { clearVDimensions } from "@/lib/clearv";
-import { citations } from "@/data/learn";
+import SourceReview from "@/components/SourceReview";
+import HelpTip from "@/components/HelpTip";
 
 const map = [
   { dim: "Clarity", maps: "communication precision" },
@@ -62,7 +63,10 @@ export default function Methodology() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Limitations</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              Limitations
+              <HelpTip term="Model profile guidance" />
+            </CardTitle>
             <CardDescription>
               CLEAR-V analyzes structure, not factual accuracy or model output quality. It is a teaching and review
               tool. It does not run the model, does not fact-check, and does not certify prompts. There is no
@@ -85,24 +89,10 @@ export default function Methodology() {
             ))}
           </CardContent>
         </Card>
+      </section>
 
-        <div>
-          <h2 className="mb-3 text-lg font-semibold">References</h2>
-          <p className="mb-3 text-sm text-muted-foreground">
-            ModelAudit draws on widely cited AI-literacy and digital-skills frameworks. No statistics or claims are
-            invented; sources are listed for transparency.
-          </p>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {citations.map((c) => (
-              <Card key={c.org}>
-                <CardHeader>
-                  <CardTitle className="text-sm">{c.org}</CardTitle>
-                  <CardDescription>{c.topic}</CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-        </div>
+      <section className="mx-auto mt-16 max-w-5xl">
+        <SourceReview variant="methodology" />
       </section>
     </div>
   );
